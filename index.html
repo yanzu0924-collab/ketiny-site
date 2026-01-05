@@ -16,8 +16,8 @@
   --muted:rgba(234,240,255,.72);
   --pink:#ff6fb1;
   --purple:#b78cff;
-  --yellow:#FFE600;
-  --today-bg:rgba(255,230,0,.22);
+  --yellow:#FFE600;                 /* 你给的那种黄 */
+  --today-bg:rgba(255,230,0,.22);   /* 今日淡黄色背景 */
   --r:18px;
 }
 
@@ -60,6 +60,7 @@ header{
   gap:10px;
   justify-content:center;
   padding:10px 0;
+  flex-wrap:wrap;
 }
 .tab{
   padding:10px 18px;
@@ -104,15 +105,18 @@ textarea{
   color:#111;
 }
 
-/* ===== 班表 ===== */
+/* ===== 班表顶部布局（修正：右边和今日对齐更好看） ===== */
 .schedule-head{
   display:flex;
   justify-content:space-between;
-  align-items:stretch;
+  align-items:flex-start;
   gap:14px;
   flex-wrap:wrap;
 }
-
+.leftbox{
+  flex:1 1 260px;
+  min-width:220px;
+}
 .worktime{
   font-size:14px;
   line-height:1.9;
@@ -120,8 +124,16 @@ textarea{
 }
 .worktime b{color:#fff}
 
+.rightbox{
+  flex:0 0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:10px;
+}
+
+/* 今日按钮 */
 .today-btn{
-  margin-top:10px;
   padding:8px 16px;
   border-radius:999px;
   border:none;
@@ -131,10 +143,8 @@ textarea{
   color:#111;
 }
 
-.monthbar{
-  display:flex;
-  justify-content:flex-end;
-}
+/* 月份下拉按钮（只留一个箭头，确保不会看不见） */
+.monthbar{display:flex;justify-content:flex-end;width:100%}
 .monthmenu{position:relative}
 .monthbtn{
   padding:10px 16px;
@@ -144,6 +154,8 @@ textarea{
   color:#fff;
   font-weight:900;
   cursor:pointer;
+  min-width:140px;
+  text-align:left;
 }
 .monthlist{
   position:absolute;
@@ -156,6 +168,7 @@ textarea{
   padding:10px;
   grid-template-columns:repeat(3,1fr);
   gap:8px;
+  z-index:50;
 }
 .monthlist.open{display:grid}
 .mitem{
@@ -172,6 +185,7 @@ textarea{
   color:#111;
 }
 
+/* 周标题（图4风格：一条圆角条） */
 .weekbar{
   margin-top:16px;
   padding:10px;
@@ -185,20 +199,23 @@ textarea{
   color:var(--muted);
 }
 
+/* 日历（图4风格：无框、上下两行） */
 .calendar{
   margin-top:14px;
   display:grid;
   grid-template-columns:repeat(7,1fr);
   gap:14px 8px;
 }
-
 .cell{
   text-align:center;
   padding:6px 0;
   border-radius:12px;
 }
 .cell.empty{visibility:hidden}
+
+/* 当天：淡黄色背景 + 2秒闪一下 */
 .cell.today{background:var(--today-bg)}
+.cell.flash{box-shadow:0 0 0 2px rgba(255,230,0,.38)}
 
 .dnum{
   font-size:16px;
@@ -208,14 +225,23 @@ textarea{
   margin-top:6px;
   font-size:13px;
   font-weight:900;
+  white-space:nowrap;
+  word-break:keep-all;
 }
-.dshift.n{color:var(--yellow)}
+.dshift.n{color:var(--yellow)} /* 休息：黄色字，背景不变 */
 
 footer{
   text-align:center;
   margin:30px 0;
   color:var(--muted);
   font-size:12px;
+}
+
+/* 手机：让右侧按钮区占满一行但仍靠右 */
+@media (max-width:520px){
+  .container{padding:12px}
+  .rightbox{width:100%}
+  .calendar{gap:12px 8px}
 }
 </style>
 </head>
@@ -238,7 +264,7 @@ footer{
 <section id="wish" style="display:none">
   <div class="card">
     <div class="section-title">心愿单</div>
-    <textarea id="wishText"></textarea>
+    <textarea id="wishText" placeholder="写下你想要的，我会收到。"></textarea>
     <button class="btn" onclick="sendWish()">传递心愿</button>
   </div>
 </section>
@@ -246,7 +272,7 @@ footer{
 <section id="bin" style="display:none">
   <div class="card">
     <div class="section-title">坏情绪回收站</div>
-    <textarea id="binText"></textarea>
+    <textarea id="binText" placeholder="把不开心的写下来，交给我。"></textarea>
     <button class="btn" onclick="sendBin()">消灭</button>
   </div>
 </section>
@@ -254,7 +280,7 @@ footer{
 <section id="schedule">
   <div class="card">
     <div class="schedule-head">
-      <div>
+      <div class="leftbox">
         <div class="section-title">班表</div>
         <div class="worktime">
           早班：<b>07:00-15:00</b><br>
@@ -262,15 +288,18 @@ footer{
           晚班：<b>23:00-07:00</b>（前一天23:00开始）<br>
           N：<b>休息</b>
         </div>
-        <button class="today-btn" id="goToday">今日</button>
       </div>
 
-      <div class="monthbar">
-        <div class="monthmenu">
-          <button class="monthbtn" id="monthBtn">
-            <span id="monthLabel">2026年 1月</span> ▾
-          </button>
-          <div class="monthlist" id="monthList"></div>
+      <div class="rightbox">
+        <button class="today-btn" id="goToday">今日</button>
+
+        <div class="monthbar">
+          <div class="monthmenu">
+            <button class="monthbtn" id="monthBtn">
+              <span id="monthLabel">2026年 1月</span> ▾
+            </button>
+            <div class="monthlist" id="monthList"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -289,69 +318,121 @@ footer{
 </main>
 
 <script>
+/* ===== Formspree ===== */
 const ENDPOINT="https://formspree.io/f/xjgkljor";
 const $=id=>document.getElementById(id);
 
 async function send(type,text,msg){
-  if(!text.trim())return;
-  await fetch(ENDPOINT,{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({type,content:text})
-  });
-  alert(msg);
+  const content=(text||"").trim();
+  if(!content){ alert("内容不能为空"); return; }
+  try{
+    const res=await fetch(ENDPOINT,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({type,content,time:new Date().toLocaleString()})
+    });
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    alert(msg);
+  }catch(e){
+    alert("发送失败，请检查网络后重试");
+  }
 }
 function sendWish(){send("心愿",$("wishText").value,"心愿已传递")}
 function sendBin(){send("坏情绪",$("binText").value,"坏情绪已消灭")}
 
+/* ===== 排班：严格按你 1月规则延续全年 =====
+   2026-01-01 ~ 01-05：早班（5天）
+   从 01-06 开始：休2天(N) -> 上6天（中/晚/早轮换）-> 休2天 ...
+*/
 const rotate=["中班","晚班","早班"];
 function shiftOf(d){
   const base=new Date(2026,0,6);
+  if(d<=new Date(2026,0,5)) return "早班";
   const diff=Math.floor((d-base)/86400000);
-  if(d<=new Date(2026,0,5))return"早班";
   const cycle=Math.floor(diff/8);
   const pos=diff%8;
-  if(pos<2)return"N";
+  if(pos<2) return "N";
   return rotate[cycle%3];
 }
 
 let y=2026,m=0;
+
+function renderMonthList(){
+  const list=$("monthList");
+  list.innerHTML="";
+  for(let i=0;i<12;i++){
+    const b=document.createElement("button");
+    b.className="mitem"+(i===m?" active":"");
+    b.textContent=`${i+1}月`;
+    b.onclick=()=>{
+      m=i;
+      list.classList.remove("open");
+      render();
+    };
+    list.appendChild(b);
+  }
+}
+
 function render(){
   $("monthLabel").textContent=`2026年 ${m+1}月`;
+  renderMonthList();
+
   const cal=$("calendar");
   cal.innerHTML="";
   const first=new Date(2026,m,1).getDay();
   const days=new Date(2026,m+1,0).getDate();
-  for(let i=0;i<first;i++)cal.appendChild(Object.assign(document.createElement("div"),{className:"cell empty"}));
-  const today=new Date();
-  for(let d=1;d<=days;d++){
+
+  for(let i=0;i<first;i++){
+    const e=document.createElement("div");
+    e.className="cell empty";
+    cal.appendChild(e);
+  }
+
+  const now=new Date();
+  for(let d=1; d<=days; d++){
     const date=new Date(2026,m,d);
+    const s=shiftOf(date);
+
     const c=document.createElement("div");
     c.className="cell";
-    if(today.getFullYear()==2026&&today.getMonth()==m&&today.getDate()==d)c.classList.add("today");
-    const s=shiftOf(date);
-    c.innerHTML=`<div class="dnum">${d}</div><div class="dshift ${s=="N"?"n":""}">${s}</div>`;
+
+    const isToday = (now.getFullYear()===2026 && now.getMonth()===m && now.getDate()===d);
+    if(isToday) c.classList.add("today");
+
+    c.innerHTML = `
+      <div class="dnum">${d}</div>
+      <div class="dshift ${s==="N"?"n":""}">${s}</div>
+    `;
     cal.appendChild(c);
   }
 }
+
+/* 今日：切到当月 + 高亮2秒 */
 $("goToday").onclick=()=>{
   const t=new Date();
-  m=t.getMonth();
+  m=t.getFullYear()===2026 ? t.getMonth() : 0;
   render();
   const el=document.querySelector(".cell.today");
   if(el){
     el.classList.add("flash");
+    el.scrollIntoView({behavior:"smooth", block:"center"});
     setTimeout(()=>el.classList.remove("flash"),2000);
   }
 };
-$("monthBtn").onclick=()=>$("monthList").classList.toggle("open");
-for(let i=0;i<12;i++){
-  const b=document.createElement("button");
-  b.className="mitem";
-  b.textContent=`${i+1}月`;
-  b.onclick=()=>{m=i;render();$("monthList").classList.remove("open")};
-  $("monthList").appendChild(b);
-}
+
+/* 月份下拉 */
+$("monthBtn").onclick=()=>{
+  $("monthList").classList.toggle("open");
+};
+/* 点击空白处关闭 */
+document.addEventListener("click",(e)=>{
+  const menu=document.querySelector(".monthmenu");
+  if(menu && !menu.contains(e.target)){
+    $("monthList").classList.remove("open");
+  }
+});
+
+/* tabs */
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick=()=>{
     ["wish","bin","schedule"].forEach(id=>$(id).style.display="none");
@@ -360,6 +441,7 @@ document.querySelectorAll(".tab").forEach(t=>{
     $(t.dataset.p).style.display="block";
   };
 });
+
 render();
 </script>
 </body>
