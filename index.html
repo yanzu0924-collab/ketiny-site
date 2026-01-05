@@ -17,7 +17,8 @@
   --pink:#ff6fb1;
   --purple:#b78cff;
   --blue:#74b2ff;
-  --sky:#8fd6ff;
+  --yellow: rgba(255, 213, 79, .22);
+  --yellow2: rgba(255, 213, 79, .35);
   --r:18px;
 }
 
@@ -101,29 +102,7 @@ textarea{
   color:#111;
 }
 
-/* hello kitty bow touch */
-.kitty-btn{position:relative}
-.kitty-btn::after{
-  content:"";
-  position:absolute;
-  right:10px; top:10px;
-  width:10px;height:10px;
-  border-radius:4px;
-  background:var(--pink);
-  box-shadow:10px 0 0 0 var(--pink);
-  opacity:.85;
-}
-.kitty-btn::before{
-  content:"";
-  position:absolute;
-  right:15px; top:13px;
-  width:8px;height:8px;
-  border-radius:50%;
-  background:rgba(255,255,255,.65);
-  opacity:.45;
-}
-
-/* schedule header */
+/* ===== Schedule Header ===== */
 .schedule-head{
   display:flex;
   justify-content:space-between;
@@ -131,18 +110,24 @@ textarea{
   gap:14px;
   flex-wrap:wrap;
 }
+
 .worktime{
   margin-top:10px;
   color:var(--muted);
   font-size:13px;
-  line-height:1.8;
+  line-height:1.85;
 }
+.worktime b{color:rgba(234,240,255,.92)}
+.worktime .line{display:block}
+
 .worktime-row{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:12px;
+  flex-wrap:wrap;
 }
+
 .today-mini{
   margin-top:0;
   padding:8px 14px;
@@ -155,14 +140,10 @@ textarea{
   white-space:nowrap;
 }
 
-/* month dropdown */
-.monthbar{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
+/* ===== Month dropdown (arrow down) ===== */
+.monthbar{display:flex;align-items:center;justify-content:flex-end}
+.monthmenu{position:relative}
+
 .monthbtn{
   border:1px solid rgba(255,255,255,.12);
   background:rgba(255,255,255,.05);
@@ -178,20 +159,18 @@ textarea{
 .monthbtn .arrow{
   display:inline-grid;
   place-items:center;
-  width:26px;height:26px;
+  width:28px;height:28px;
   border-radius:10px;
   border:1px solid rgba(255,255,255,.12);
   background:rgba(0,0,0,.18);
   font-size:16px;
   line-height:1;
 }
-.monthmenu{
-  position:relative;
-}
+
 .monthlist{
   position:absolute;
   right:0;
-  top:52px;
+  top:54px;
   width:180px;
   padding:10px;
   border-radius:14px;
@@ -200,12 +179,11 @@ textarea{
   backdrop-filter:blur(10px);
   display:none;
   z-index:50;
-}
-.monthlist.open{display:grid}
-.monthlist{
   grid-template-columns:repeat(3,1fr);
   gap:8px;
 }
+.monthlist.open{display:grid}
+
 .mitem{
   text-align:center;
   padding:10px 0;
@@ -222,64 +200,71 @@ textarea{
   border-color:transparent;
 }
 
-.weekday{
+/* ===== Weekday row like screenshot 4 (no boxed pills) ===== */
+.weekbar{
   margin-top:14px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+}
+.weekday{
   display:grid;
   grid-template-columns:repeat(7, 1fr);
-  gap:10px;
+  gap:0;
   color:var(--muted);
   font-size:12px;
 }
 .weekday div{
   text-align:center;
-  padding:10px 0;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  background:rgba(0,0,0,.10);
 }
 .weekday .sun, .weekday .sat{ color:#ff6b6b; }
 
+/* ===== Calendar like screenshot 4 (no boxes) ===== */
 .calendar{
-  margin-top:10px;
+  margin-top:12px;
   display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:10px;
+  grid-template-columns:repeat(7, 1fr);
+  gap:14px 10px;
+  padding:6px 2px 2px;
 }
-.day{
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:14px;
-  padding:12px;
-  min-height:78px;
-  background:rgba(0,0,0,.12);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
+
+.cell{
+  min-height:46px;
+  text-align:center;
+  border-radius:12px;
+  padding:6px 2px;
 }
-.day.empty{ visibility:hidden; }
-.dnum{ font-weight:900; font-size:16px; }
+.cell.empty{visibility:hidden}
+
+.dnum{
+  font-weight:900;
+  font-size:16px;
+  line-height:1.2;
+}
 .dshift{
-  margin-top:8px;
+  margin-top:6px;
   font-size:13px;
-  font-weight:900; /* 班次加粗 */
-  color:rgba(234,240,255,.86);
+  font-weight:900;             /* 班次加粗 */
+  color:rgba(234,240,255,.85);
+  white-space:nowrap;          /* 防止竖排 */
+  word-break:keep-all;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
-/* rest day */
-.day.rest{
-  background:linear-gradient(135deg,var(--sky),#bdeaff);
-  border-color:rgba(0,0,0,.08);
+/* N 取消特殊背景：与其他一样，只显示文字 N */
+.dshift.n{ color:rgba(234,240,255,.85); }
+
+/* 今日：黄色轻高亮 */
+.cell.is-today{
+  background:var(--yellow);
 }
-.day.rest .dshift,
-.day.rest .dnum{
-  color:#003a5c;
+.cell.flash{
+  box-shadow:0 0 0 2px var(--yellow2);
 }
 
-/* today highlight (2s) */
-.day.todayFlash{
-  outline:2px solid var(--pink);
-  box-shadow:0 0 0 8px rgba(255,111,177,.10);
-}
-
+/* Footer */
 footer{
   text-align:center;
   margin:30px 0;
@@ -287,11 +272,10 @@ footer{
   font-size:12px;
 }
 
+/* Mobile tighten */
 @media (max-width: 520px){
   .container{padding:12px}
-  .weekday{gap:8px}
-  .calendar{gap:8px}
-  .day{min-height:70px; padding:10px}
+  .calendar{gap:12px 8px}
   .dnum{font-size:15px}
   .dshift{font-size:12px}
   .monthbtn{padding:10px 12px}
@@ -319,7 +303,7 @@ footer{
     <div class="card">
       <div class="section-title">心愿单</div>
       <textarea id="wishText" placeholder="写下你想要的，我会收到。"></textarea>
-      <button class="btn kitty-btn" onclick="sendWish()">发送</button>
+      <button class="btn" onclick="sendWish()">传递心愿</button>
     </div>
   </section>
 
@@ -327,7 +311,7 @@ footer{
     <div class="card">
       <div class="section-title">坏情绪回收站</div>
       <textarea id="binText" placeholder="把不开心的写下来，交给我。"></textarea>
-      <button class="btn kitty-btn" onclick="sendBin()">消灭</button>
+      <button class="btn" onclick="sendBin()">消灭</button>
     </div>
   </section>
 
@@ -336,18 +320,21 @@ footer{
       <div class="schedule-head">
         <div>
           <div class="section-title">班表</div>
+
           <div class="worktime">
-            <div>早班 <b>07:00-15:00</b> ｜ 中班 <b>15:00-23:00</b></div>
+            <span class="line">早班：<b>07:00-15:00</b></span>
+            <span class="line">中班：<b>15:00-23:00</b></span>
             <div class="worktime-row">
-              <div>晚班 <b>23:00-07:00</b> <span class="small">(前一天 23:00 开始)</span></div>
-              <button class="today-mini kitty-btn" id="goToday">今日</button>
+              <span class="line">晚班：<b>23:00-07:00</b> <span class="small">(前一天 23:00 开始)</span></span>
+              <button class="today-mini" id="goToday">今日</button>
             </div>
+            <span class="line">N：<b>休息</b></span>
           </div>
         </div>
 
         <div class="monthbar">
           <div class="monthmenu">
-            <button class="monthbtn kitty-btn" id="monthBtn" aria-label="选择月份">
+            <button class="monthbtn" id="monthBtn" aria-label="选择月份">
               <span id="monthLabel">2026年 1月</span>
               <span class="arrow">▾</span>
             </button>
@@ -356,7 +343,10 @@ footer{
         </div>
       </div>
 
-      <div class="weekday" id="weekdayRow"></div>
+      <div class="weekbar">
+        <div class="weekday" id="weekdayRow"></div>
+      </div>
+
       <div class="calendar" id="calendar"></div>
     </div>
   </section>
@@ -384,14 +374,12 @@ async function send(type,text,msg){
     alert("发送失败，请检查网络后重试");
   }
 }
-function sendWish(){send("心愿",$("wishText").value,"柱子已接旨")}
-function sendBin(){send("坏情绪",$("binText").value,"坏情绪已传递，等待柱子来铲除")}
+function sendWish(){send("心愿",$("wishText").value,"心愿已传递")}
+function sendBin(){send("坏情绪",$("binText").value,"坏情绪已消灭")}
 
-/* ====== 2026 排班生成（严格符合你给的规则并可延续全年） ======
-   规则锚点：
+/* ====== 2026 排班生成（按你 1 月规则继续排到全年） ======
    2026-01-01 ~ 01-05：早班（5天）
-   从 01-06 开始：休2天(N) -> 上6天（班次轮换：中 -> 晚 -> 早 -> 中 ...）-> 休2天(N) -> ...
-   这样自然得到：2026-02-01~02-06 为中班
+   从 01-06 开始：休2天(N) -> 上6天（中/晚/早轮换）-> 休2天 ...
 */
 function pad2(n){return String(n).padStart(2,"0");}
 function keyOf(d){return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;}
@@ -409,7 +397,7 @@ function buildShiftMap2026(){
   }
 
   // 2) 从 1/6 起：休2天 -> 上6天（中/晚/早轮换）-> 休2天 ...
-  const rotate = ["中班","晚班","早班"]; // 按你 1 月规则：1/8-13 中班，1/16-21 晚班，1/24-29 早班
+  const rotate = ["中班","晚班","早班"];
   let idx=0;
 
   while(d<=end){
@@ -425,12 +413,11 @@ function buildShiftMap2026(){
     }
     idx++;
   }
-
   return map;
 }
 const shiftMap2026 = buildShiftMap2026();
 
-/* ====== 月份控件（只允许 2026） ====== */
+/* ====== 日历渲染（只允许 2026） ====== */
 const WEEKDAYS = ["日","一","二","三","四","五","六"];
 function renderWeekdayRow(){
   const row=$("weekdayRow");
@@ -452,7 +439,6 @@ let viewMonth = 0; // 0-11
 
 function setMonthLabel(){
   $("monthLabel").textContent = `${viewYear}年 ${viewMonth+1}月`;
-  // month list active
   document.querySelectorAll(".mitem").forEach(el=>{
     el.classList.toggle("active", Number(el.dataset.m)===viewMonth);
   });
@@ -467,9 +453,10 @@ function renderCalendar(){
   const firstDow = first.getDay();
   const total = daysInMonth(viewYear, viewMonth);
 
+  // leading blanks
   for(let i=0;i<firstDow;i++){
     const empty=document.createElement("div");
-    empty.className="day empty";
+    empty.className="cell empty";
     cal.appendChild(empty);
   }
 
@@ -481,10 +468,10 @@ function renderCalendar(){
     const k = keyOf(d);
     const s = shiftMap2026[k] || "";
 
-    const box=document.createElement("div");
-    box.className="day";
-    if(s==="N") box.classList.add("rest");
-    if(k===todayKey) box.classList.add("today");
+    const cell=document.createElement("div");
+    cell.className="cell";
+    if(k===todayKey) cell.classList.add("is-today");
+    cell.title = `${viewYear}年${viewMonth+1}月${day}日  ${s}`;
 
     const num=document.createElement("div");
     num.className="dnum";
@@ -493,14 +480,15 @@ function renderCalendar(){
     const shiftEl=document.createElement("div");
     shiftEl.className="dshift";
     shiftEl.textContent=s;
+    if(s==="N") shiftEl.classList.add("n");
 
-    box.appendChild(num);
-    box.appendChild(shiftEl);
-    cal.appendChild(box);
+    cell.appendChild(num);
+    cell.appendChild(shiftEl);
+    cal.appendChild(cell);
   }
 }
 
-/* month dropdown build */
+/* ====== 月份下拉（仅 2026） ====== */
 function buildMonthList(){
   const list=$("monthList");
   list.innerHTML="";
@@ -526,7 +514,7 @@ $("monthBtn").onclick=()=>{
 };
 document.addEventListener("click",(e)=>{
   const menu=document.querySelector(".monthmenu");
-  if(!menu.contains(e.target)){
+  if(menu && !menu.contains(e.target)){
     $("monthList").classList.remove("open");
   }
 });
@@ -534,22 +522,19 @@ document.addEventListener("click",(e)=>{
 /* 今日按钮：切当月 + 高亮当天 2 秒 */
 $("goToday").onclick=()=>{
   const now=new Date();
-  if(now.getFullYear()!==2026){
-    // 不允许跳到 2025/2027；如果当前不是 2026，就跳到 2026-01
-    viewYear=2026; viewMonth=0;
-    renderCalendar();
-    return;
-  }
-  viewYear=2026;
-  viewMonth=now.getMonth();
+
+  // 只允许 2026
+  viewYear = 2026;
+  viewMonth = (now.getFullYear()===2026) ? now.getMonth() : 0;
+
   renderCalendar();
 
   const cal=$("calendar");
-  const todayEl = cal.querySelector(".day.today");
+  const todayEl = cal.querySelector(".cell.is-today");
   if(todayEl){
-    todayEl.classList.add("todayFlash");
+    todayEl.classList.add("flash");
     todayEl.scrollIntoView({behavior:"smooth", block:"center"});
-    setTimeout(()=>todayEl.classList.remove("todayFlash"), 2000);
+    setTimeout(()=>todayEl.classList.remove("flash"), 2000);
   }
 };
 
@@ -560,9 +545,7 @@ document.querySelectorAll(".tab").forEach(t=>{
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
     t.classList.add("active");
     $(t.dataset.p).style.display="block";
-    if(t.dataset.p==="schedule"){
-      renderCalendar();
-    }
+    if(t.dataset.p==="schedule") renderCalendar();
   };
 });
 
