@@ -20,15 +20,16 @@
   --pink:#ff6fb1;
   --purple:#b78cff;
 
-  --yellow:#FFE600;                 /* 你给的黄 */
-  --today-bg:rgba(255,230,0,.22);   /* 今日淡黄背景 */
+  --yellow:#FFE600;
+  --today-bg:rgba(255,230,0,.22);
   --r:18px;
 
-  /* ====== Hello Kitty 图标（你自己替换文件名/路径即可） ======
-     你在网上找一个粉色 Hello Kitty 图标后，
-     把 kitty.png 放到同目录，或改成你的图片路径/链接
+  /* ===== 你只需要改这里：把图片文件放到同目录，并改成对应文件名 =====
+     1) Hello Kitty 图标：建议命名 hk.png
+     2) 蝴蝶结图片：建议命名 bow.png
   */
-  --kitty-icon: url("kitty.png");
+  --kitty-icon: url("hk.png");
+  --bow-icon: url("bow.png");
 }
 
 *{box-sizing:border-box}
@@ -53,8 +54,7 @@ header{
 }
 .nav{display:flex;align-items:center;gap:10px;font-weight:900}
 
-/* ====== 顶部左上角 Logo：改成 Hello Kitty 图标 ====== */
-.logo{
+
   width:34px;height:34px;border-radius:14px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.18);
@@ -67,10 +67,10 @@ header{
   background-image:var(--kitty-icon);
   background-repeat:no-repeat;
   background-position:center;
-  background-size:78%;
+  background-size:88%;
 }
 
-/* ====== tabs ====== */
+/* ===== tabs ===== */
 .tabs{
   display:flex;
   gap:10px;
@@ -92,32 +92,28 @@ header{
   font-weight:900;
 }
 
-/* ====== 给两个 tab 头上加蝴蝶结（一个粉色一个蓝色） ====== */
+/* ===== 顶部蝴蝶结：用你上传的 bow.png（粉色/蓝色用滤镜分开） ===== */
 .tab::before{
   content:"";
   position:absolute;
-  top:-9px; left:50%;
+  top:-14px; left:50%;
   transform:translateX(-50%);
-  width:22px;height:14px;
-  border-radius:10px;
+  width:34px;height:22px;
+  background-image:var(--bow-icon);
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
   filter:drop-shadow(0 2px 6px rgba(0,0,0,.35));
-  opacity:.95;
+  opacity:.98;
+  pointer-events:none;
 }
 /* 左边 tab：粉色蝴蝶结 */
 .tab:nth-child(1)::before{
-  background:
-    radial-gradient(circle at 32% 55%, rgba(255,255,255,.55), transparent 58%),
-    radial-gradient(circle at 68% 55%, rgba(255,255,255,.55), transparent 58%),
-    radial-gradient(circle at 50% 55%, rgba(0,0,0,.25) 0 2px, transparent 3px),
-    linear-gradient(135deg, rgba(255,111,177,.95), rgba(255,111,177,.55));
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.35)) saturate(1.2);
 }
-/* 右边 tab：蓝色蝴蝶结 */
+/* 右边 tab：蓝色蝴蝶结（同一张 bow.png 变蓝） */
 .tab:nth-child(2)::before{
-  background:
-    radial-gradient(circle at 32% 55%, rgba(255,255,255,.55), transparent 58%),
-    radial-gradient(circle at 68% 55%, rgba(255,255,255,.55), transparent 58%),
-    radial-gradient(circle at 50% 55%, rgba(0,0,0,.25) 0 2px, transparent 3px),
-    linear-gradient(135deg, rgba(116,178,255,.95), rgba(116,178,255,.55));
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.35)) hue-rotate(180deg) saturate(1.6) brightness(1.05);
 }
 
 .card{
@@ -166,7 +162,7 @@ textarea{
 }
 .hint{font-size:12px;color:var(--muted);margin:0 0 10px}
 
-/* ===== 班表顶部布局：时间 + 工具条同一行（今日 + 月份） ===== */
+/* ===== 班表顶部布局 ===== */
 .schedule-head{
   display:flex;
   justify-content:space-between;
@@ -185,7 +181,6 @@ textarea{
 }
 .worktime b{color:#fff}
 
-/* 工具条：今日 + 月份 同一行 */
 .actionbar{
   flex:0 0 auto;
   display:flex;
@@ -205,29 +200,33 @@ textarea{
   color:#111;
 }
 
-/* 月份下拉 */
+/* ===== 月份按钮：修复“右边空白太多” ===== */
 .monthmenu{position:relative}
 .monthbtn{
-  padding:10px 14px;
+  position:relative;
+  padding:10px 34px 10px 14px;  /* 右侧留给箭头，避免空白过大 */
   border-radius:14px;
   border:1px solid var(--line);
   background:rgba(255,255,255,.06);
   color:#fff;
   font-weight:900;
   cursor:pointer;
-  min-width:160px;
 
-  /* 让箭头贴最右边、空间不浪费 */
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
+  min-width:124px;              /* 关键：不要太宽 */
+  width:auto;
+  text-align:left;
 }
 .monthbtn .arrow{
-  font-size:20px;         /* 箭头稍微大一点 */
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:18px;
   line-height:1;
   opacity:.9;
+  pointer-events:none;
 }
+
 .monthlist{
   position:absolute;
   right:0;
@@ -256,7 +255,7 @@ textarea{
   color:#111;
 }
 
-/* 周标题（图4风格） */
+/* 周标题 */
 .weekbar{
   margin-top:16px;
   padding:10px;
@@ -270,7 +269,7 @@ textarea{
   color:var(--muted);
 }
 
-/* 日历（图4风格：无框） */
+/* 日历 */
 .calendar{
   margin-top:14px;
   display:grid;
@@ -284,14 +283,11 @@ textarea{
 }
 .cell.empty{visibility:hidden}
 
-/* 今日：淡黄色背景 + 2秒闪一下 */
+/* 今日 */
 .cell.today{background:var(--today-bg)}
 .cell.flash{box-shadow:0 0 0 2px rgba(255,230,0,.38)}
 
-.dnum{
-  font-size:16px;
-  font-weight:900;
-}
+.dnum{font-size:16px;font-weight:900}
 .dshift{
   margin-top:6px;
   font-size:13px;
@@ -299,8 +295,6 @@ textarea{
   white-space:nowrap;
   word-break:keep-all;
 }
-
-/* 休息日：N 字体黄色；并且“日期数字”也改成黄色 */
 .cell.rest .dnum{color:var(--yellow)}
 .dshift.n{color:var(--yellow)}
 
@@ -311,7 +305,7 @@ footer{
   font-size:12px;
 }
 
-/* ===== 粉色 HelloKitty 弹窗：图标同步 ===== */
+/* ===== 弹窗 ===== */
 .modal{
   position:fixed;inset:0;
   display:none;
@@ -339,10 +333,13 @@ footer{
   background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.35), transparent 60%);
   transform:rotate(18deg);
 }
+
 .kitty{
   display:flex;align-items:center;gap:10px;
   margin-bottom:10px;
 }
+
+/* ===== 心愿/坏情绪 图标：就在这里（圆圈里） ===== */
 .kitty .face{
   width:34px;height:34px;border-radius:14px;
   background:rgba(255,255,255,.22);
@@ -353,11 +350,20 @@ footer{
 .kitty .face::before{
   content:"";
   position:absolute;inset:0;
-  background-image:var(--kitty-icon);
   background-repeat:no-repeat;
   background-position:center;
-  background-size:78%;
+  background-size:88%;
 }
+/* 心愿：显示 Hello Kitty */
+.modal-card[data-type="wish"] .face::before{
+  background-image:var(--kitty-icon);
+}
+/* 坏情绪：显示蝴蝶结 */
+.modal-card[data-type="bin"] .face::before{
+  background-image:var(--bow-icon);
+  background-size:80%;
+}
+
 .kitty-title{
   font-weight:900;
   color:rgba(255,255,255,.92);
@@ -379,17 +385,11 @@ footer{
   color:#111;
 }
 
-/* 手机：把“今日”放左边，“月份”放右边，去掉你标的空白感 */
+/* 手机：今日左，月份右 */
 @media (max-width:520px){
   .container{padding:12px}
-
-  .schedule-head{gap:10px}
-  .leftbox{min-width:0; flex:1 1 100%}  /* 让左侧信息占满一行，下面工具条再一行 */
-  .actionbar{
-    width:100%;
-    justify-content:space-between;       /* 今日左，月份右 */
-  }
-
+  .leftbox{min-width:0; flex:1 1 100%}
+  .actionbar{width:100%; justify-content:space-between}
   .calendar{gap:12px 8px}
 }
 </style>
@@ -410,11 +410,8 @@ footer{
 
 <main class="container">
 
-<!-- 合并页：心愿在上，坏情绪在下 -->
 <section id="note">
   <div class="card">
-    <!-- 你标注的“心愿 & 回收站”大标题：删除（因为顶部 tab 已经有了） -->
-
     <div class="stack">
       <div class="subcard">
         <h3>心愿单</h3>
@@ -430,7 +427,6 @@ footer{
         <button class="btn" onclick="sendBin()">消灭</button>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -447,7 +443,6 @@ footer{
         </div>
       </div>
 
-      <!-- 今日 + 月份：同一行（手机端：今日左，月份右） -->
       <div class="actionbar">
         <button class="today-btn" id="goToday">今日</button>
 
@@ -474,9 +469,8 @@ footer{
 <footer>ketiny越来越好</footer>
 </main>
 
-<!-- HelloKitty 粉色弹窗 -->
 <div class="modal" id="modal">
-  <div class="modal-card">
+  <div class="modal-card" id="modalCard" data-type="wish">
     <div class="kitty">
       <div class="face"></div>
       <div class="kitty-title" id="modalTitle">提示</div>
@@ -487,71 +481,61 @@ footer{
 </div>
 
 <script>
-/* ===== Formspree ===== */
 const ENDPOINT="https://formspree.io/f/xjgkljor";
 const $=id=>document.getElementById(id);
 
-/* 弹窗 */
-function openModal(msg, title=""){
+function openModal(msg, title="", type="wish"){
   $("modalTitle").textContent = title || "提示";
   $("modalMsg").textContent = msg;
+
+  // 关键：决定“心愿/坏情绪”图标显示哪个（就在圆圈里）
+  $("modalCard").setAttribute("data-type", type);
+
   $("modal").classList.add("open");
 }
-function closeModal(){
-  $("modal").classList.remove("open");
-}
+function closeModal(){ $("modal").classList.remove("open"); }
 $("modalOk").onclick = closeModal;
-$("modal").addEventListener("click",(e)=>{
-  if(e.target.id==="modal") closeModal();
-});
+$("modal").addEventListener("click",(e)=>{ if(e.target.id==="modal") closeModal(); });
 
-/* ====== 标题规则：
-   心愿：心愿单❤️
-   坏情绪：坏情绪都走开
-*/
 function modalTitleByType(type){
-  if(type==="心愿") return "心愿单❤️";
-  if(type==="坏情绪") return "坏情绪都走开";
+  if(type==="wish") return "心愿单❤️";
+  if(type==="bin")  return "坏情绪都走开";
   return "提示";
 }
 
-async function send(type,text,successMsg){
+async function send(typeKey,text,successMsg){
   const content=(text||"").trim();
-  const title = modalTitleByType(type);
+  const title = modalTitleByType(typeKey);
 
   if(!content){
-    openModal("内容不能为空喔～", title);
+    openModal("内容不能为空喔～", title, typeKey);
     return false;
   }
   try{
     const res=await fetch(ENDPOINT,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({type,content,time:new Date().toLocaleString()})
+      body:JSON.stringify({type:typeKey,content,time:new Date().toLocaleString()})
     });
     if(!res.ok) throw new Error("HTTP "+res.status);
-    openModal(successMsg, title);
+    openModal(successMsg, title, typeKey);
     return true;
   }catch(e){
-    openModal("发送失败了，请检查网络后再试一次。", title);
+    openModal("发送失败了，请检查网络后再试一次。", title, typeKey);
     return false;
   }
 }
 
 async function sendWish(){
-  const ok = await send("心愿",$("wishText").value,"柱子收到你的心愿啦");
+  const ok = await send("wish",$("wishText").value,"柱子收到你的心愿啦");
   if(ok) $("wishText").value="";
 }
-
 async function sendBin(){
-  const ok = await send("坏情绪",$("binText").value,"柱子已经收到，马上来帮你铲除坏情绪");
+  const ok = await send("bin",$("binText").value,"柱子已经收到，马上来帮你铲除坏情绪");
   if(ok) $("binText").value="";
 }
 
-/* ===== 排班：严格按你 1月规则延续全年（2026） =====
-   2026-01-01 ~ 01-05：早班（5天）
-   从 01-06 开始：休2天(N) -> 上6天（中/晚/早轮换）-> 休2天 ...
-*/
+/* ===== 排班 ===== */
 const rotate=["中班","晚班","早班"];
 function shiftOf(d){
   const base=new Date(2026,0,6);
@@ -563,7 +547,7 @@ function shiftOf(d){
   return rotate[cycle%3];
 }
 
-let m=0; // 0-11
+let m=0;
 
 function renderMonthList(){
   const list=$("monthList");
@@ -616,7 +600,6 @@ function render(){
   }
 }
 
-/* 今日：切到当月 + 高亮2秒 */
 $("goToday").onclick=()=>{
   const t=new Date();
   m = (t.getFullYear()===2026) ? t.getMonth() : 0;
@@ -629,19 +612,12 @@ $("goToday").onclick=()=>{
   }
 };
 
-/* 月份下拉 */
-$("monthBtn").onclick=()=>{
-  $("monthList").classList.toggle("open");
-};
-/* 点击空白处关闭 */
+$("monthBtn").onclick=()=>{ $("monthList").classList.toggle("open"); };
 document.addEventListener("click",(e)=>{
   const menu=document.querySelector(".monthmenu");
-  if(menu && !menu.contains(e.target)){
-    $("monthList").classList.remove("open");
-  }
+  if(menu && !menu.contains(e.target)) $("monthList").classList.remove("open");
 });
 
-/* tabs */
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick=()=>{
     ["note","schedule"].forEach(id=>$(id).style.display="none");
