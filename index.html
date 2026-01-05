@@ -21,12 +21,16 @@
   --purple:#b78cff;
 
   --yellow:#FFE600;
-  --today-bg:rgba(255,230,0,.22);
+
+  /* ✅ 今日点击高亮：粉红色（只在点“今日”时闪一下） */
+  --today-pink: rgba(255,111,177,.22);
+  --flash-pink: rgba(255,111,177,.40);
+
   --r:18px;
 
-  /* ===== 你只需要改这里：把图片文件放到同目录，并改成对应文件名 =====
-     1) Hello Kitty 图标：建议命名 hk.png
-     2) 蝴蝶结图片：建议命名 bow.png
+  /* ✅ 你只需要放两张图到同目录：
+     hk.png = Hello Kitty 图标
+     bow.png = 蝴蝶结图
   */
   --kitty-icon: url("hk.png");
   --bow-icon: url("bow.png");
@@ -54,7 +58,8 @@ header{
 }
 .nav{display:flex;align-items:center;gap:10px;font-weight:900}
 
-
+/* 顶部左上角 Logo：Hello Kitty */
+.logo{
   width:34px;height:34px;border-radius:14px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.18);
@@ -70,7 +75,7 @@ header{
   background-size:88%;
 }
 
-/* ===== tabs ===== */
+/* tabs */
 .tabs{
   display:flex;
   gap:10px;
@@ -92,7 +97,7 @@ header{
   font-weight:900;
 }
 
-/* ===== 顶部蝴蝶结：用你上传的 bow.png（粉色/蓝色用滤镜分开） ===== */
+/* 顶部蝴蝶结：用 bow.png（右边用滤镜变蓝） */
 .tab::before{
   content:"";
   position:absolute;
@@ -107,11 +112,9 @@ header{
   opacity:.98;
   pointer-events:none;
 }
-/* 左边 tab：粉色蝴蝶结 */
 .tab:nth-child(1)::before{
   filter:drop-shadow(0 2px 6px rgba(0,0,0,.35)) saturate(1.2);
 }
-/* 右边 tab：蓝色蝴蝶结（同一张 bow.png 变蓝） */
 .tab:nth-child(2)::before{
   filter:drop-shadow(0 2px 6px rgba(0,0,0,.35)) hue-rotate(180deg) saturate(1.6) brightness(1.05);
 }
@@ -147,7 +150,7 @@ textarea{
   color:#111;
 }
 
-/* ===== 合并页：心愿在上，坏情绪在下 ===== */
+/* 合并页 */
 .stack{display:grid;gap:16px}
 .subcard{
   background:rgba(255,255,255,.04);
@@ -155,14 +158,10 @@ textarea{
   border-radius:16px;
   padding:16px;
 }
-.subcard h3{
-  margin:0 0 10px;
-  font-size:18px;
-  font-weight:900;
-}
+.subcard h3{margin:0 0 10px;font-size:18px;font-weight:900}
 .hint{font-size:12px;color:var(--muted);margin:0 0 10px}
 
-/* ===== 班表顶部布局 ===== */
+/* 班表顶部布局 */
 .schedule-head{
   display:flex;
   justify-content:space-between;
@@ -170,15 +169,8 @@ textarea{
   gap:14px;
   flex-wrap:wrap;
 }
-.leftbox{
-  flex:1 1 260px;
-  min-width:220px;
-}
-.worktime{
-  font-size:14px;
-  line-height:1.9;
-  color:var(--muted);
-}
+.leftbox{flex:1 1 260px;min-width:220px}
+.worktime{font-size:14px;line-height:1.9;color:var(--muted)}
 .worktime b{color:#fff}
 
 .actionbar{
@@ -200,11 +192,11 @@ textarea{
   color:#111;
 }
 
-/* ===== 月份按钮：修复“右边空白太多” ===== */
+/* ✅ 月份按钮：删除右侧多余空白（不再强制 min-width） */
 .monthmenu{position:relative}
 .monthbtn{
   position:relative;
-  padding:10px 34px 10px 14px;  /* 右侧留给箭头，避免空白过大 */
+  padding:10px 34px 10px 14px;
   border-radius:14px;
   border:1px solid var(--line);
   background:rgba(255,255,255,.06);
@@ -212,9 +204,11 @@ textarea{
   font-weight:900;
   cursor:pointer;
 
-  min-width:124px;              /* 关键：不要太宽 */
-  width:auto;
+  min-width:0;                 /* 关键：不要固定宽 */
+  width:max-content;           /* 按内容自适应 */
+  max-width: 80vw;             /* 防止极端情况撑爆 */
   text-align:left;
+  white-space:nowrap;
 }
 .monthbtn .arrow{
   position:absolute;
@@ -227,6 +221,7 @@ textarea{
   pointer-events:none;
 }
 
+/* 月份下拉 */
 .monthlist{
   position:absolute;
   right:0;
@@ -283,9 +278,14 @@ textarea{
 }
 .cell.empty{visibility:hidden}
 
-/* 今日 */
-.cell.today{background:var(--today-bg)}
-.cell.flash{box-shadow:0 0 0 2px rgba(255,230,0,.38)}
+/* ✅ 关闭“默认当天黄色高亮”：today 不再上色 */
+.cell.today{background:transparent}
+
+/* ✅ 点击“今日”才闪粉色 */
+.cell.flash{
+  background:var(--today-pink);
+  box-shadow:0 0 0 2px var(--flash-pink);
+}
 
 .dnum{font-size:16px;font-weight:900}
 .dshift{
@@ -305,7 +305,7 @@ footer{
   font-size:12px;
 }
 
-/* ===== 弹窗 ===== */
+/* 弹窗 */
 .modal{
   position:fixed;inset:0;
   display:none;
@@ -334,12 +334,9 @@ footer{
   transform:rotate(18deg);
 }
 
-.kitty{
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:10px;
-}
+.kitty{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 
-/* ===== 心愿/坏情绪 图标：就在这里（圆圈里） ===== */
+/* 心愿/坏情绪图标（圆圈里） */
 .kitty .face{
   width:34px;height:34px;border-radius:14px;
   background:rgba(255,255,255,.22);
@@ -354,26 +351,11 @@ footer{
   background-position:center;
   background-size:88%;
 }
-/* 心愿：显示 Hello Kitty */
-.modal-card[data-type="wish"] .face::before{
-  background-image:var(--kitty-icon);
-}
-/* 坏情绪：显示蝴蝶结 */
-.modal-card[data-type="bin"] .face::before{
-  background-image:var(--bow-icon);
-  background-size:80%;
-}
+.modal-card[data-type="wish"] .face::before{background-image:var(--kitty-icon)}
+.modal-card[data-type="bin"]  .face::before{background-image:var(--bow-icon);background-size:80%}
 
-.kitty-title{
-  font-weight:900;
-  color:rgba(255,255,255,.92);
-}
-.modal-msg{
-  font-size:14px;
-  line-height:1.6;
-  color:rgba(255,255,255,.92);
-  margin:8px 0 12px;
-}
+.kitty-title{font-weight:900;color:rgba(255,255,255,.92)}
+.modal-msg{font-size:14px;line-height:1.6;color:rgba(255,255,255,.92);margin:8px 0 12px}
 .modal-ok{
   width:100%;
   border:none;
@@ -385,12 +367,21 @@ footer{
   color:#111;
 }
 
-/* 手机：今日左，月份右 */
+/* ✅ 手机：今日左 + 月份右；下拉改成“一行4个”并更宽更舒服 */
 @media (max-width:520px){
   .container{padding:12px}
   .leftbox{min-width:0; flex:1 1 100%}
   .actionbar{width:100%; justify-content:space-between}
   .calendar{gap:12px 8px}
+
+  /* 1) 你要的：1-4 / 5-8 / 9-12 */
+  .monthlist{
+    grid-template-columns:repeat(4, 1fr);
+    width:min(92vw, 420px);      /* 更宽，不挤 */
+    padding:12px;
+    gap:10px;
+  }
+  .mitem{padding:12px 0}
 }
 </style>
 </head>
@@ -487,10 +478,7 @@ const $=id=>document.getElementById(id);
 function openModal(msg, title="", type="wish"){
   $("modalTitle").textContent = title || "提示";
   $("modalMsg").textContent = msg;
-
-  // 关键：决定“心愿/坏情绪”图标显示哪个（就在圆圈里）
   $("modalCard").setAttribute("data-type", type);
-
   $("modal").classList.add("open");
 }
 function closeModal(){ $("modal").classList.remove("open"); }
@@ -535,7 +523,7 @@ async function sendBin(){
   if(ok) $("binText").value="";
 }
 
-/* ===== 排班 ===== */
+/* 排班 */
 const rotate=["中班","晚班","早班"];
 function shiftOf(d){
   const base=new Date(2026,0,6);
@@ -600,10 +588,12 @@ function render(){
   }
 }
 
+/* ✅ 今日：只闪粉色（不再常驻黄色） */
 $("goToday").onclick=()=>{
   const t=new Date();
   m = (t.getFullYear()===2026) ? t.getMonth() : 0;
   render();
+
   const el=document.querySelector(".cell.today");
   if(el){
     el.classList.add("flash");
