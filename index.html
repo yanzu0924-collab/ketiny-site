@@ -10,14 +10,18 @@
   --bg1:#070a12;
   --bg2:#0b0f1d;
   --bg3:#11162e;
+
   --card:rgba(255,255,255,.07);
   --line:rgba(255,255,255,.14);
+
   --text:#eaf0ff;
   --muted:rgba(234,240,255,.72);
+
   --pink:#ff6fb1;
   --purple:#b78cff;
-  --yellow:#FFE600;                 /* 你给的那种黄 */
-  --today-bg:rgba(255,230,0,.22);   /* 今日淡黄色背景 */
+
+  --yellow:#FFE600;                 /* 你给的黄 */
+  --today-bg:rgba(255,230,0,.22);   /* 今日淡黄背景 */
   --r:18px;
 }
 
@@ -83,15 +87,16 @@ header{
   margin-top:16px;
 }
 
-.section-title{font-size:22px;font-weight:900;margin-bottom:10px}
+.section-title{font-size:22px;font-weight:900;margin:0 0 10px}
 
 textarea{
-  width:100%;min-height:140px;
+  width:100%;min-height:130px;
   background:rgba(0,0,0,.25);
   border:1px solid var(--line);
   border-radius:14px;
   padding:14px;
   color:var(--text);
+  resize:vertical;
 }
 
 .btn{
@@ -105,7 +110,22 @@ textarea{
   color:#111;
 }
 
-/* ===== 班表顶部布局（修正：右边和今日对齐更好看） ===== */
+/* ===== 合并页：心愿在上，坏情绪在下 ===== */
+.stack{display:grid;gap:16px}
+.subcard{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:16px;
+}
+.subcard h3{
+  margin:0 0 10px;
+  font-size:18px;
+  font-weight:900;
+}
+.hint{font-size:12px;color:var(--muted);margin:0 0 10px}
+
+/* ===== 班表顶部布局：时间+工具条同一行（今日 + 月份） ===== */
 .schedule-head{
   display:flex;
   justify-content:space-between;
@@ -124,11 +144,12 @@ textarea{
 }
 .worktime b{color:#fff}
 
-.rightbox{
+/* 工具条：今日 + 月份 同一行（你要求“同一行不是同一列”） */
+.actionbar{
   flex:0 0 auto;
   display:flex;
-  flex-direction:column;
-  align-items:flex-end;
+  align-items:center;
+  justify-content:flex-end;
   gap:10px;
 }
 
@@ -143,8 +164,7 @@ textarea{
   color:#111;
 }
 
-/* 月份下拉按钮（只留一个箭头，确保不会看不见） */
-.monthbar{display:flex;justify-content:flex-end;width:100%}
+/* 月份下拉 */
 .monthmenu{position:relative}
 .monthbtn{
   padding:10px 16px;
@@ -185,7 +205,7 @@ textarea{
   color:#111;
 }
 
-/* 周标题（图4风格：一条圆角条） */
+/* 周标题（图4风格） */
 .weekbar{
   margin-top:16px;
   padding:10px;
@@ -199,7 +219,7 @@ textarea{
   color:var(--muted);
 }
 
-/* 日历（图4风格：无框、上下两行） */
+/* 日历（图4风格：无框） */
 .calendar{
   margin-top:14px;
   display:grid;
@@ -213,7 +233,7 @@ textarea{
 }
 .cell.empty{visibility:hidden}
 
-/* 当天：淡黄色背景 + 2秒闪一下 */
+/* 今日：淡黄色背景 + 2秒闪一下 */
 .cell.today{background:var(--today-bg)}
 .cell.flash{box-shadow:0 0 0 2px rgba(255,230,0,.38)}
 
@@ -228,7 +248,10 @@ textarea{
   white-space:nowrap;
   word-break:keep-all;
 }
-.dshift.n{color:var(--yellow)} /* 休息：黄色字，背景不变 */
+
+/* 休息日：N 字体黄色；并且“日期数字”也改成黄色（你框起来那些） */
+.cell.rest .dnum{color:var(--yellow)}
+.dshift.n{color:var(--yellow)}
 
 footer{
   text-align:center;
@@ -237,10 +260,85 @@ footer{
   font-size:12px;
 }
 
-/* 手机：让右侧按钮区占满一行但仍靠右 */
+/* ===== 粉色 HelloKitty 弹窗 ===== */
+.modal{
+  position:fixed;inset:0;
+  display:none;
+  align-items:center;justify-content:center;
+  background:rgba(0,0,0,.55);
+  z-index:999;
+  padding:18px;
+}
+.modal.open{display:flex}
+.modal-card{
+  width:min(420px, 92vw);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.18);
+  background:linear-gradient(135deg, rgba(255,111,177,.28), rgba(183,140,255,.18));
+  backdrop-filter:blur(10px);
+  padding:18px 16px 16px;
+  position:relative;
+  overflow:hidden;
+}
+.modal-card::before{
+  content:"";
+  position:absolute;
+  width:120px;height:120px;
+  right:-30px;top:-30px;
+  background:radial-gradient(circle at 40% 40%, rgba(255,255,255,.35), transparent 60%);
+  transform:rotate(18deg);
+}
+.kitty{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;
+}
+.kitty .face{
+  width:34px;height:34px;border-radius:14px;
+  background:rgba(255,255,255,.22);
+  position:relative;
+}
+.kitty .face::before,
+.kitty .face::after{
+  content:"";
+  position:absolute;
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(17,17,17,.75);
+  top:12px;
+}
+.kitty .face::before{left:10px}
+.kitty .face::after{right:10px}
+.kitty .bow{
+  width:22px;height:14px;border-radius:8px;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  position:absolute;
+  right:-6px;top:-4px;
+}
+.kitty-title{
+  font-weight:900;
+  color:rgba(255,255,255,.92);
+}
+.modal-msg{
+  font-size:14px;
+  line-height:1.6;
+  color:rgba(255,255,255,.92);
+  margin:8px 0 12px;
+}
+.modal-ok{
+  width:100%;
+  border:none;
+  border-radius:14px;
+  padding:10px 14px;
+  cursor:pointer;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--pink),var(--purple));
+  color:#111;
+}
+
+/* 手机：工具条自动换行但仍右对齐 */
 @media (max-width:520px){
   .container{padding:12px}
-  .rightbox{width:100%}
+  .actionbar{width:100%}
+  .actionbar{justify-content:flex-end}
   .calendar{gap:12px 8px}
 }
 </style>
@@ -253,31 +351,38 @@ footer{
     给 Ketiny 的小网站
   </div>
   <div class="tabs">
-    <div class="tab" data-p="wish">心愿单</div>
-    <div class="tab" data-p="bin">坏情绪回收站</div>
-    <div class="tab active" data-p="schedule">班表</div>
+    <div class="tab active" data-p="note">心愿 & 回收站</div>
+    <div class="tab" data-p="schedule">班表</div>
   </div>
 </header>
 
 <main class="container">
 
-<section id="wish" style="display:none">
+<!-- 合并页：心愿在上，坏情绪在下 -->
+<section id="note">
   <div class="card">
-    <div class="section-title">心愿单</div>
-    <textarea id="wishText" placeholder="写下你想要的，我会收到。"></textarea>
-    <button class="btn" onclick="sendWish()">传递心愿</button>
+    <div class="section-title">心愿 & 回收站</div>
+
+    <div class="stack">
+      <div class="subcard">
+        <h3>心愿单</h3>
+        <p class="hint">写下你想要的，我会收到。</p>
+        <textarea id="wishText" placeholder="把心愿写在这里…"></textarea>
+        <button class="btn" onclick="sendWish()">传递心愿</button>
+      </div>
+
+      <div class="subcard">
+        <h3>坏情绪回收站</h3>
+        <p class="hint">把不开心的写下来，交给我。</p>
+        <textarea id="binText" placeholder="把坏情绪写在这里…"></textarea>
+        <button class="btn" onclick="sendBin()">消灭</button>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<section id="bin" style="display:none">
-  <div class="card">
-    <div class="section-title">坏情绪回收站</div>
-    <textarea id="binText" placeholder="把不开心的写下来，交给我。"></textarea>
-    <button class="btn" onclick="sendBin()">消灭</button>
-  </div>
-</section>
-
-<section id="schedule">
+<section id="schedule" style="display:none">
   <div class="card">
     <div class="schedule-head">
       <div class="leftbox">
@@ -290,16 +395,15 @@ footer{
         </div>
       </div>
 
-      <div class="rightbox">
+      <!-- 今日 + 月份：同一行 -->
+      <div class="actionbar">
         <button class="today-btn" id="goToday">今日</button>
 
-        <div class="monthbar">
-          <div class="monthmenu">
-            <button class="monthbtn" id="monthBtn">
-              <span id="monthLabel">2026年 1月</span> ▾
-            </button>
-            <div class="monthlist" id="monthList"></div>
-          </div>
+        <div class="monthmenu">
+          <button class="monthbtn" id="monthBtn">
+            <span id="monthLabel">2026年 1月</span> ▾
+          </button>
+          <div class="monthlist" id="monthList"></div>
         </div>
       </div>
     </div>
@@ -317,14 +421,43 @@ footer{
 <footer>ketiny越来越好</footer>
 </main>
 
+<!-- HelloKitty 粉色弹窗 -->
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <div class="kitty">
+      <div class="face"><div class="bow"></div></div>
+      <div class="kitty-title" id="modalTitle">提示</div>
+    </div>
+    <div class="modal-msg" id="modalMsg"></div>
+    <button class="modal-ok" id="modalOk">好</button>
+  </div>
+</div>
+
 <script>
 /* ===== Formspree ===== */
 const ENDPOINT="https://formspree.io/f/xjgkljor";
 const $=id=>document.getElementById(id);
 
-async function send(type,text,msg){
+/* 粉色弹窗（替代 alert） */
+function openModal(msg, title=""){
+  $("modalTitle").textContent = title || "提示";
+  $("modalMsg").textContent = msg;
+  $("modal").classList.add("open");
+}
+function closeModal(){
+  $("modal").classList.remove("open");
+}
+$("modalOk").onclick = closeModal;
+$("modal").addEventListener("click",(e)=>{
+  if(e.target.id==="modal") closeModal();
+});
+
+async function send(type,text,successMsg){
   const content=(text||"").trim();
-  if(!content){ alert("内容不能为空"); return; }
+  if(!content){
+    openModal("内容不能为空喔～","Hello Kitty");
+    return false;
+  }
   try{
     const res=await fetch(ENDPOINT,{
       method:"POST",
@@ -332,15 +465,25 @@ async function send(type,text,msg){
       body:JSON.stringify({type,content,time:new Date().toLocaleString()})
     });
     if(!res.ok) throw new Error("HTTP "+res.status);
-    alert(msg);
+    openModal(successMsg,"Hello Kitty");
+    return true;
   }catch(e){
-    alert("发送失败，请检查网络后重试");
+    openModal("发送失败了，请检查网络后再试一次。","Hello Kitty");
+    return false;
   }
 }
-function sendWish(){send("心愿",$("wishText").value,"心愿已传递")}
-function sendBin(){send("坏情绪",$("binText").value,"坏情绪已消灭")}
 
-/* ===== 排班：严格按你 1月规则延续全年 =====
+async function sendWish(){
+  const ok = await send("心愿",$("wishText").value,"柱子收到你的心愿啦");
+  if(ok) $("wishText").value="";
+}
+
+async function sendBin(){
+  const ok = await send("坏情绪",$("binText").value,"柱子已经收到，马上来帮你铲除坏情绪");
+  if(ok) $("binText").value="";
+}
+
+/* ===== 排班：严格按你 1月规则延续全年（2026） =====
    2026-01-01 ~ 01-05：早班（5天）
    从 01-06 开始：休2天(N) -> 上6天（中/晚/早轮换）-> 休2天 ...
 */
@@ -355,7 +498,7 @@ function shiftOf(d){
   return rotate[cycle%3];
 }
 
-let y=2026,m=0;
+let m=0; // 0-11
 
 function renderMonthList(){
   const list=$("monthList");
@@ -395,6 +538,7 @@ function render(){
 
     const c=document.createElement("div");
     c.className="cell";
+    if(s==="N") c.classList.add("rest");
 
     const isToday = (now.getFullYear()===2026 && now.getMonth()===m && now.getDate()===d);
     if(isToday) c.classList.add("today");
@@ -410,7 +554,7 @@ function render(){
 /* 今日：切到当月 + 高亮2秒 */
 $("goToday").onclick=()=>{
   const t=new Date();
-  m=t.getFullYear()===2026 ? t.getMonth() : 0;
+  m = (t.getFullYear()===2026) ? t.getMonth() : 0;
   render();
   const el=document.querySelector(".cell.today");
   if(el){
@@ -435,7 +579,7 @@ document.addEventListener("click",(e)=>{
 /* tabs */
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick=()=>{
-    ["wish","bin","schedule"].forEach(id=>$(id).style.display="none");
+    ["note","schedule"].forEach(id=>$(id).style.display="none");
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
     t.classList.add("active");
     $(t.dataset.p).style.display="block";
