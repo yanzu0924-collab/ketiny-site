@@ -16,9 +16,8 @@
   --muted:rgba(234,240,255,.72);
   --pink:#ff6fb1;
   --purple:#b78cff;
-  --blue:#74b2ff;
-  --yellow: rgba(255, 213, 79, .22);
-  --yellow2: rgba(255, 213, 79, .35);
+  --yellow:#FFE600;
+  --today-bg:rgba(255,230,0,.22);
   --r:18px;
 }
 
@@ -35,7 +34,6 @@ body{
 }
 
 .container{max-width:1200px;margin:auto;padding:16px}
-a{text-decoration:none;color:inherit}
 
 header{
   position:sticky;top:0;z-index:9;
@@ -43,24 +41,29 @@ header{
   background:rgba(7,10,18,.7);
   border-bottom:1px solid var(--line);
 }
-.nav{display:flex;justify-content:space-between;align-items:center}
-.brand{display:flex;align-items:center;gap:10px;font-weight:900}
+.nav{display:flex;align-items:center;gap:10px;font-weight:900}
 .logo{
   width:34px;height:34px;border-radius:14px;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
+  background:linear-gradient(135deg,#74b2ff,#b78cff);
   position:relative;
 }
 .logo::after{
   content:"";
   position:absolute;inset:0;
   background:
-    radial-gradient(circle at 65% 40%,var(--pink) 0 18%,transparent 19%),
-    radial-gradient(circle at 40% 40%,var(--pink) 0 18%,transparent 19%);
+    radial-gradient(circle at 65% 40%,#ff6fb1 0 18%,transparent 19%),
+    radial-gradient(circle at 40% 40%,#ff6fb1 0 18%,transparent 19%);
 }
 
-.tabs{display:flex;gap:10px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.tabs{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  padding:10px 0;
+}
 .tab{
-  padding:10px 16px;border-radius:999px;
+  padding:10px 18px;
+  border-radius:999px;
   border:1px solid var(--line);
   background:rgba(255,255,255,.06);
   cursor:pointer;
@@ -79,8 +82,7 @@ header{
   margin-top:16px;
 }
 
-.section-title{font-size:22px;font-weight:900;margin:0}
-.small{font-size:12px;color:var(--muted)}
+.section-title{font-size:22px;font-weight:900;margin-bottom:10px}
 
 textarea{
   width:100%;min-height:140px;
@@ -102,183 +104,118 @@ textarea{
   color:#111;
 }
 
-/* ===== Schedule Header ===== */
+/* ===== 班表 ===== */
 .schedule-head{
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
+  align-items:stretch;
   gap:14px;
   flex-wrap:wrap;
 }
 
 .worktime{
-  margin-top:10px;
+  font-size:14px;
+  line-height:1.9;
   color:var(--muted);
-  font-size:13px;
-  line-height:1.85;
 }
-.worktime b{color:rgba(234,240,255,.92)}
-.worktime .line{display:block}
+.worktime b{color:#fff}
 
-.worktime-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-.today-mini{
-  margin-top:0;
-  padding:8px 14px;
+.today-btn{
+  margin-top:10px;
+  padding:8px 16px;
   border-radius:999px;
   border:none;
-  cursor:pointer;
   background:linear-gradient(135deg,var(--pink),var(--purple));
   font-weight:900;
-  color:#111;
-  white-space:nowrap;
-}
-
-/* ===== Month dropdown (arrow down) ===== */
-.monthbar{display:flex;align-items:center;justify-content:flex-end}
-.monthmenu{position:relative}
-
-.monthbtn{
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.05);
-  border-radius:14px;
-  padding:10px 14px;
-  font-weight:900;
-  color:var(--text);
   cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.monthbtn .arrow{
-  display:inline-grid;
-  place-items:center;
-  width:28px;height:28px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  font-size:16px;
-  line-height:1;
+  color:#111;
 }
 
+.monthbar{
+  display:flex;
+  justify-content:flex-end;
+}
+.monthmenu{position:relative}
+.monthbtn{
+  padding:10px 16px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
 .monthlist{
   position:absolute;
   right:0;
-  top:54px;
-  width:180px;
-  padding:10px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(7,10,18,.92);
-  backdrop-filter:blur(10px);
+  top:52px;
   display:none;
-  z-index:50;
+  background:rgba(7,10,18,.95);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px;
   grid-template-columns:repeat(3,1fr);
   gap:8px;
 }
 .monthlist.open{display:grid}
-
 .mitem{
-  text-align:center;
   padding:10px 0;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.04);
-  cursor:pointer;
+  border-radius:10px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  color:#fff;
   font-weight:900;
-  color:var(--text);
+  cursor:pointer;
 }
 .mitem.active{
   background:linear-gradient(135deg,var(--pink),var(--purple));
   color:#111;
-  border-color:transparent;
 }
 
-/* ===== Weekday row like screenshot 4 (no boxed pills) ===== */
 .weekbar{
-  margin-top:14px;
-  padding:10px 12px;
+  margin-top:16px;
+  padding:10px;
   border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.04);
+  border:1px solid var(--line);
 }
 .weekday{
   display:grid;
-  grid-template-columns:repeat(7, 1fr);
-  gap:0;
-  color:var(--muted);
-  font-size:12px;
-}
-.weekday div{
+  grid-template-columns:repeat(7,1fr);
   text-align:center;
+  color:var(--muted);
 }
-.weekday .sun, .weekday .sat{ color:#ff6b6b; }
 
-/* ===== Calendar like screenshot 4 (no boxes) ===== */
 .calendar{
-  margin-top:12px;
+  margin-top:14px;
   display:grid;
-  grid-template-columns:repeat(7, 1fr);
-  gap:14px 10px;
-  padding:6px 2px 2px;
+  grid-template-columns:repeat(7,1fr);
+  gap:14px 8px;
 }
 
 .cell{
-  min-height:46px;
   text-align:center;
+  padding:6px 0;
   border-radius:12px;
-  padding:6px 2px;
 }
 .cell.empty{visibility:hidden}
+.cell.today{background:var(--today-bg)}
 
 .dnum{
-  font-weight:900;
   font-size:16px;
-  line-height:1.2;
+  font-weight:900;
 }
 .dshift{
   margin-top:6px;
   font-size:13px;
-  font-weight:900;             /* 班次加粗 */
-  color:rgba(234,240,255,.85);
-  white-space:nowrap;          /* 防止竖排 */
-  word-break:keep-all;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  font-weight:900;
 }
+.dshift.n{color:var(--yellow)}
 
-/* N 取消特殊背景：与其他一样，只显示文字 N */
-.dshift.n{ color:rgba(234,240,255,.85); }
-
-/* 今日：黄色轻高亮 */
-.cell.is-today{
-  background:var(--yellow);
-}
-.cell.flash{
-  box-shadow:0 0 0 2px var(--yellow2);
-}
-
-/* Footer */
 footer{
   text-align:center;
   margin:30px 0;
   color:var(--muted);
   font-size:12px;
-}
-
-/* Mobile tighten */
-@media (max-width: 520px){
-  .container{padding:12px}
-  .calendar{gap:12px 8px}
-  .dnum{font-size:15px}
-  .dshift{font-size:12px}
-  .monthbtn{padding:10px 12px}
 }
 </style>
 </head>
@@ -286,12 +223,10 @@ footer{
 <body>
 <header>
   <div class="container nav">
-    <div class="brand">
-      <div class="logo"></div>
-      给 Ketiny 的小网站
-    </div>
+    <div class="logo"></div>
+    给 Ketiny 的小网站
   </div>
-  <div class="tabs container">
+  <div class="tabs">
     <div class="tab" data-p="wish">心愿单</div>
     <div class="tab" data-p="bin">坏情绪回收站</div>
     <div class="tab active" data-p="schedule">班表</div>
@@ -299,258 +234,133 @@ footer{
 </header>
 
 <main class="container">
-  <section id="wish" style="display:none">
-    <div class="card">
-      <div class="section-title">心愿单</div>
-      <textarea id="wishText" placeholder="写下你想要的，我会收到。"></textarea>
-      <button class="btn" onclick="sendWish()">传递心愿</button>
-    </div>
-  </section>
 
-  <section id="bin" style="display:none">
-    <div class="card">
-      <div class="section-title">坏情绪回收站</div>
-      <textarea id="binText" placeholder="把不开心的写下来，交给我。"></textarea>
-      <button class="btn" onclick="sendBin()">消灭</button>
-    </div>
-  </section>
+<section id="wish" style="display:none">
+  <div class="card">
+    <div class="section-title">心愿单</div>
+    <textarea id="wishText"></textarea>
+    <button class="btn" onclick="sendWish()">传递心愿</button>
+  </div>
+</section>
 
-  <section id="schedule">
-    <div class="card">
-      <div class="schedule-head">
-        <div>
-          <div class="section-title">班表</div>
+<section id="bin" style="display:none">
+  <div class="card">
+    <div class="section-title">坏情绪回收站</div>
+    <textarea id="binText"></textarea>
+    <button class="btn" onclick="sendBin()">消灭</button>
+  </div>
+</section>
 
-          <div class="worktime">
-            <span class="line">早班：<b>07:00-15:00</b></span>
-            <span class="line">中班：<b>15:00-23:00</b></span>
-            <div class="worktime-row">
-              <span class="line">晚班：<b>23:00-07:00</b> <span class="small">(前一天 23:00 开始)</span></span>
-              <button class="today-mini" id="goToday">今日</button>
-            </div>
-            <span class="line">N：<b>休息</b></span>
-          </div>
+<section id="schedule">
+  <div class="card">
+    <div class="schedule-head">
+      <div>
+        <div class="section-title">班表</div>
+        <div class="worktime">
+          早班：<b>07:00-15:00</b><br>
+          中班：<b>15:00-23:00</b><br>
+          晚班：<b>23:00-07:00</b>（前一天23:00开始）<br>
+          N：<b>休息</b>
         </div>
-
-        <div class="monthbar">
-          <div class="monthmenu">
-            <button class="monthbtn" id="monthBtn" aria-label="选择月份">
-              <span id="monthLabel">2026年 1月</span>
-              <span class="arrow">▾</span>
-            </button>
-            <div class="monthlist" id="monthList"></div>
-          </div>
-        </div>
+        <button class="today-btn" id="goToday">今日</button>
       </div>
 
-      <div class="weekbar">
-        <div class="weekday" id="weekdayRow"></div>
+      <div class="monthbar">
+        <div class="monthmenu">
+          <button class="monthbtn" id="monthBtn">
+            <span id="monthLabel">2026年 1月</span> ▾
+          </button>
+          <div class="monthlist" id="monthList"></div>
+        </div>
       </div>
-
-      <div class="calendar" id="calendar"></div>
     </div>
-  </section>
 
-  <footer>ketiny越来越好</footer>
+    <div class="weekbar">
+      <div class="weekday">
+        <div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>
+      </div>
+    </div>
+
+    <div class="calendar" id="calendar"></div>
+  </div>
+</section>
+
+<footer>ketiny越来越好</footer>
 </main>
 
 <script>
-/* ====== Formspree（保留你的设置） ====== */
 const ENDPOINT="https://formspree.io/f/xjgkljor";
-function $(id){return document.getElementById(id);}
+const $=id=>document.getElementById(id);
 
 async function send(type,text,msg){
-  const content=(text||"").trim();
-  if(!content){ alert("内容不能为空"); return; }
-  try{
-    const res=await fetch(ENDPOINT,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({type,content,time:new Date().toLocaleString()})
-    });
-    if(!res.ok) throw new Error("HTTP "+res.status);
-    alert(msg);
-  }catch(e){
-    alert("发送失败，请检查网络后重试");
-  }
+  if(!text.trim())return;
+  await fetch(ENDPOINT,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({type,content:text})
+  });
+  alert(msg);
 }
 function sendWish(){send("心愿",$("wishText").value,"心愿已传递")}
 function sendBin(){send("坏情绪",$("binText").value,"坏情绪已消灭")}
 
-/* ====== 2026 排班生成（按你 1 月规则继续排到全年） ======
-   2026-01-01 ~ 01-05：早班（5天）
-   从 01-06 开始：休2天(N) -> 上6天（中/晚/早轮换）-> 休2天 ...
-*/
-function pad2(n){return String(n).padStart(2,"0");}
-function keyOf(d){return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;}
-
-function buildShiftMap2026(){
-  const map = {};
-  const start = new Date(2026,0,1);
-  const end   = new Date(2026,11,31);
-
-  // 1) 1/1-1/5 早班
-  let d = new Date(start);
-  for(let i=0;i<5;i++){
-    map[keyOf(d)]="早班";
-    d.setDate(d.getDate()+1);
-  }
-
-  // 2) 从 1/6 起：休2天 -> 上6天（中/晚/早轮换）-> 休2天 ...
-  const rotate = ["中班","晚班","早班"];
-  let idx=0;
-
-  while(d<=end){
-    // 休2天
-    for(let r=0;r<2 && d<=end;r++){
-      map[keyOf(d)]="N";
-      d.setDate(d.getDate()+1);
-    }
-    // 上6天
-    for(let w=0; w<6 && d<=end; w++){
-      map[keyOf(d)] = rotate[idx % rotate.length];
-      d.setDate(d.getDate()+1);
-    }
-    idx++;
-  }
-  return map;
-}
-const shiftMap2026 = buildShiftMap2026();
-
-/* ====== 日历渲染（只允许 2026） ====== */
-const WEEKDAYS = ["日","一","二","三","四","五","六"];
-function renderWeekdayRow(){
-  const row=$("weekdayRow");
-  row.innerHTML="";
-  WEEKDAYS.forEach((w,i)=>{
-    const div=document.createElement("div");
-    div.textContent=w;
-    if(i===0) div.classList.add("sun");
-    if(i===6) div.classList.add("sat");
-    row.appendChild(div);
-  });
-}
-renderWeekdayRow();
-
-function daysInMonth(y, mIndex){ return new Date(y, mIndex+1, 0).getDate(); }
-
-let viewYear = 2026;
-let viewMonth = 0; // 0-11
-
-function setMonthLabel(){
-  $("monthLabel").textContent = `${viewYear}年 ${viewMonth+1}月`;
-  document.querySelectorAll(".mitem").forEach(el=>{
-    el.classList.toggle("active", Number(el.dataset.m)===viewMonth);
-  });
+const rotate=["中班","晚班","早班"];
+function shiftOf(d){
+  const base=new Date(2026,0,6);
+  const diff=Math.floor((d-base)/86400000);
+  if(d<=new Date(2026,0,5))return"早班";
+  const cycle=Math.floor(diff/8);
+  const pos=diff%8;
+  if(pos<2)return"N";
+  return rotate[cycle%3];
 }
 
-function renderCalendar(){
-  setMonthLabel();
+let y=2026,m=0;
+function render(){
+  $("monthLabel").textContent=`2026年 ${m+1}月`;
   const cal=$("calendar");
   cal.innerHTML="";
-
-  const first = new Date(viewYear, viewMonth, 1);
-  const firstDow = first.getDay();
-  const total = daysInMonth(viewYear, viewMonth);
-
-  // leading blanks
-  for(let i=0;i<firstDow;i++){
-    const empty=document.createElement("div");
-    empty.className="cell empty";
-    cal.appendChild(empty);
-  }
-
-  const now=new Date();
-  const todayKey = keyOf(now);
-
-  for(let day=1; day<=total; day++){
-    const d = new Date(viewYear, viewMonth, day);
-    const k = keyOf(d);
-    const s = shiftMap2026[k] || "";
-
-    const cell=document.createElement("div");
-    cell.className="cell";
-    if(k===todayKey) cell.classList.add("is-today");
-    cell.title = `${viewYear}年${viewMonth+1}月${day}日  ${s}`;
-
-    const num=document.createElement("div");
-    num.className="dnum";
-    num.textContent=day;
-
-    const shiftEl=document.createElement("div");
-    shiftEl.className="dshift";
-    shiftEl.textContent=s;
-    if(s==="N") shiftEl.classList.add("n");
-
-    cell.appendChild(num);
-    cell.appendChild(shiftEl);
-    cal.appendChild(cell);
+  const first=new Date(2026,m,1).getDay();
+  const days=new Date(2026,m+1,0).getDate();
+  for(let i=0;i<first;i++)cal.appendChild(Object.assign(document.createElement("div"),{className:"cell empty"}));
+  const today=new Date();
+  for(let d=1;d<=days;d++){
+    const date=new Date(2026,m,d);
+    const c=document.createElement("div");
+    c.className="cell";
+    if(today.getFullYear()==2026&&today.getMonth()==m&&today.getDate()==d)c.classList.add("today");
+    const s=shiftOf(date);
+    c.innerHTML=`<div class="dnum">${d}</div><div class="dshift ${s=="N"?"n":""}">${s}</div>`;
+    cal.appendChild(c);
   }
 }
-
-/* ====== 月份下拉（仅 2026） ====== */
-function buildMonthList(){
-  const list=$("monthList");
-  list.innerHTML="";
-  for(let m=0;m<12;m++){
-    const b=document.createElement("button");
-    b.type="button";
-    b.className="mitem";
-    b.dataset.m = String(m);
-    b.textContent = `${m+1}月`;
-    b.onclick=()=>{
-      viewMonth = m;
-      list.classList.remove("open");
-      renderCalendar();
-    };
-    list.appendChild(b);
-  }
-}
-buildMonthList();
-setMonthLabel();
-
-$("monthBtn").onclick=()=>{
-  $("monthList").classList.toggle("open");
-};
-document.addEventListener("click",(e)=>{
-  const menu=document.querySelector(".monthmenu");
-  if(menu && !menu.contains(e.target)){
-    $("monthList").classList.remove("open");
-  }
-});
-
-/* 今日按钮：切当月 + 高亮当天 2 秒 */
 $("goToday").onclick=()=>{
-  const now=new Date();
-
-  // 只允许 2026
-  viewYear = 2026;
-  viewMonth = (now.getFullYear()===2026) ? now.getMonth() : 0;
-
-  renderCalendar();
-
-  const cal=$("calendar");
-  const todayEl = cal.querySelector(".cell.is-today");
-  if(todayEl){
-    todayEl.classList.add("flash");
-    todayEl.scrollIntoView({behavior:"smooth", block:"center"});
-    setTimeout(()=>todayEl.classList.remove("flash"), 2000);
+  const t=new Date();
+  m=t.getMonth();
+  render();
+  const el=document.querySelector(".cell.today");
+  if(el){
+    el.classList.add("flash");
+    setTimeout(()=>el.classList.remove("flash"),2000);
   }
 };
-
-/* tabs */
+$("monthBtn").onclick=()=>$("monthList").classList.toggle("open");
+for(let i=0;i<12;i++){
+  const b=document.createElement("button");
+  b.className="mitem";
+  b.textContent=`${i+1}月`;
+  b.onclick=()=>{m=i;render();$("monthList").classList.remove("open")};
+  $("monthList").appendChild(b);
+}
 document.querySelectorAll(".tab").forEach(t=>{
   t.onclick=()=>{
-    ["wish","bin","schedule"].forEach(id=>{ $(id).style.display="none"; });
+    ["wish","bin","schedule"].forEach(id=>$(id).style.display="none");
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
     t.classList.add("active");
     $(t.dataset.p).style.display="block";
-    if(t.dataset.p==="schedule") renderCalendar();
   };
 });
-
-/* init */
-renderCalendar();
+render();
 </script>
 </body>
 </html>
